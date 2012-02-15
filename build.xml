@@ -1,0 +1,20 @@
+<project name="bfi" default="jar" basedir=".">
+    <property name="src_dir" value="src"/>
+    <property name="out_dir" value="bin"/>
+   
+   <target name="clean" >
+      <delete dir="${out_dir}" />
+   </target>
+   
+   <target name="compile" >
+    <mkdir dir="${out_dir}"/>
+     <javac srcdir="${src_dir}" destdir="${out_dir}" />
+   </target>
+   <target name="jar" depends="clean, compile">
+    <jar basedir="${out_dir}" destfile="bfi.jar">
+      <manifest>
+        <attribute name="Main-Class" value="com.rickbutton.bfi.Main" />
+      </manifest>
+    </jar>
+   </target>
+</project>
