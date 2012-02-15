@@ -1,0 +1,23 @@
+h1. BFI
+
+p. A simple Brainfuck interpreter written in java.
+
+@To create jar@
+@ant jar@
+
+@To run@
+@java -jar bfi.jar [brainfuck file] <optional input>@
+
+h2. Examples
+
+@java -jar bfi.jar examples/pi.b ?50@
+
+@java -jar bfi.jar examples/numwarp.b !19a2@
+
+p. Input is placed at the end of the file, prefixed by either a ! or ?. 
+! takes the byte value of the input and ? takes the literal number value. See the examples for actual usage.
+
+h2. Future Features
+# Literals in brainfuck files
+# -Inputs from the command line-
+# More debug commands
