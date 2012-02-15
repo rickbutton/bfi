@@ -9,7 +9,8 @@ public enum Instruction {
 	OUTPUT('.'),
 	INPUT(','),
 	JUMP_FORWARD('['),
-	JUMP_BACKWARD(']');
+	JUMP_BACKWARD(']'),
+	DEBUG('@');
 	
 	private char instruction;
 	

@@ -1,9 +1,9 @@
 package com.rickbutton.bfi.memory;
 
-public interface Memory {
+public interface Memory<T> {
 
-	public byte get(int loc);
-	public void set(int loc, byte b);
+	public T get(int loc);
+	public void set(int loc, T b);
 	public int getSize();
 	
 	public void dec(int loc);

@@ -11,14 +11,14 @@ import java.util.Stack;
 import com.rickbutton.bfi.inset.Instruction;
 import com.rickbutton.bfi.memory.Memory;
 
-public class SimpleInterpreter implements Interpreter {
+public class SimpleInterpreter implements Interpreter<Long> {
 
 	private InputStream in;
 	private PrintStream out;
-	private Memory mem;
+	private Memory<Long> mem;
 	
 	
-	public SimpleInterpreter(InputStream in, PrintStream out, Memory mem) {
+	public SimpleInterpreter(InputStream in, PrintStream out, Memory<Long> mem) {
 		this.in = in;
 		this.out = out;
 		this.mem = mem;
@@ -52,19 +52,24 @@ public class SimpleInterpreter implements Interpreter {
 					break;
 				case INPUT:
 					if (!inputStack.isEmpty())
-						mem.set(p, inputStack.pop());
+						mem.set(p, inputStack.pop().longValue());
+					else
+						mem.set(p, -1L);
 					break;
 				case JUMP_BACKWARD:
 					if (mem.get(p) != 0)
 						i = getKeyByValue(jumpMap, i);
 					break;
 				case JUMP_FORWARD:
-					if (mem.get(p) == 0)
+					if (mem.get(p) == 0L)
 						i = jumpMap.get(i);
 					break;
 				case OUTPUT:
-					out.print((char)mem.get(p));
+					out.print((char)mem.get(p).longValue());
 					break;
+				case DEBUG:
+					out.println("Pointer: " + p);
+					out.println("Value: " + mem.get(p));
 				
 			}
 			
@@ -83,13 +88,13 @@ public class SimpleInterpreter implements Interpreter {
 			else {
 				if (ist == Instruction.JUMP_BACKWARD)
 					if (s.isEmpty())
-						throw new IllegalArgumentException("Invalid instructions");
+						throw new IllegalArgumentException("Extra ] at " + i);
 					else
 						jumpMap.put(s.pop(), i);
 			}
 		}
 		if (!s.isEmpty())
-			throw new IllegalArgumentException("Invalid instructions");
+			throw new IllegalArgumentException("Extra [");
 		return jumpMap;
 	}
 	
