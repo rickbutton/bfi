@@ -4,6 +4,7 @@
    
    <target name="clean" >
       <delete dir="${out_dir}" />
+      <delete file="bfi.jar" />
    </target>
    
    <target name="compile" >
