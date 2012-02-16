@@ -2,6 +2,7 @@ package com.rickbutton.bfi;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -18,23 +19,31 @@ import com.rickbutton.bfi.memory.SimpleWrappingMemory;
 import com.rickbutton.bfi.parser.BangParser;
 import com.rickbutton.bfi.parser.Code;
 import com.rickbutton.bfi.parser.Parser;
+import com.rickbutton.bfi.parser.exception.ParseException;
 
 public class Main {
 
 	public static void main(String[] args) {
 		BfCompiler compiler = new SimpleBfCompiler();
-		String fileName = args[0];
-		String s;
-		try {
-			s = readFileAsString(fileName);
-		} catch (IOException e) {
-			System.out.println(fileName + " not found");
+		if (args.length == 0) {
+			System.out.println("Usage: java -jar bfi.jar [filename] <input>");
 			return;
 		}
+		File file = new File(args[0]);
+		
+		String inputOverride = null;
+		if (args.length >= 2)
+			inputOverride = args[1];
 		
 		Parser parser = new BangParser();
 		
-		Code code = parser.parse(s);
+		Code code;
+		try {
+			code = parser.parse(file, inputOverride);
+		} catch (ParseException e) {
+			System.out.println("Parse error: " + e.getMessage());
+			return;
+		}
 		
 		
 		Instruction[] inset = compiler.compile(code.getCode());
@@ -44,18 +53,5 @@ public class Main {
 		i.interpret(inset, code.getInput().getBytes());
 	}
 	
-	private static String readFileAsString(String filePath) throws java.io.IOException {
-        StringBuffer fileData = new StringBuffer(1000);
-        BufferedReader reader = new BufferedReader(
-                new FileReader(filePath));
-        char[] buf = new char[1024];
-        int numRead=0;
-        while((numRead=reader.read(buf)) != -1){
-            String readData = String.valueOf(buf, 0, numRead);
-            fileData.append(readData);
-            buf = new char[1024];
-        }
-        reader.close();
-        return fileData.toString();
-    }
+	
 }
